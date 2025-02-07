@@ -1,8 +1,8 @@
 -- CreateExtension
-CREATE EXTENSION IF NOT EXISTS "pg_cron";
+-- CREATE EXTENSION IF NOT EXISTS "pg_cron";
 
--- CreateExtension
-CREATE EXTENSION IF NOT EXISTS "pg_stat_statements";
+-- -- CreateExtension
+-- CREATE EXTENSION IF NOT EXISTS "pg_stat_statements";
 
 -- CreateTable
 CREATE TABLE "User" (
