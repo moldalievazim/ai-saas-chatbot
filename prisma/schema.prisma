@@ -24,9 +24,9 @@ model User {
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
   stripeId     String 
-
   billings     Billings[]
   campaign     Campaign[]
+  domain       Domain[]
 }
 
 model Billings {
@@ -34,7 +34,6 @@ model Billings {
   plan     String
   credits  Int
   userId   String
-  
   user     User   @relation(fields: [userId], references: [id])
 }
 
@@ -44,6 +43,16 @@ model Campaign {
   customers String[]
   userId    String 
   createdAt DateTime @default(now())
-
   user      User @relation(fields: [userId], references: [id])
+  domain    Domain[]
+}
+
+model Domain {
+  id       String @id @default(uuid())
+  name     String 
+  icon     String
+  userId   String 
+  user     User @relation(fields: [userId], references: [id])
+  campaignId String
+  campaign Campaign @relation(fields: [campaignId], references: [id])
 }
