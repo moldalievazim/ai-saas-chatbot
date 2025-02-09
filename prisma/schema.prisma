@@ -55,4 +55,13 @@ model Domain {
   user     User @relation(fields: [userId], references: [id])
   campaignId String
   campaign Campaign @relation(fields: [campaignId], references: [id])
+  helpdesk Helpdesk[]
+}
+
+model Helpdesk {
+  id       String @id @default(uuid())
+  question String
+  answer   String
+  domainId String
+  domain   Domain @relation(fields: [domainId], references: [id])
 }
