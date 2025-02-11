@@ -38,30 +38,42 @@ model Billings {
 }
 
 model Campaign {
-  id        String @id @default(uuid())
-  name      String 
-  customers String[]
-  userId    String 
-  createdAt DateTime @default(now())
-  user      User @relation(fields: [userId], references: [id])
-  domain    Domain[]
+  id          String @id @default(uuid())
+  name        String 
+  customers   String[]
+  userId      String 
+  createdAt   DateTime @default(now())
+  user        User @relation(fields: [userId], references: [id])
+  domain      Domain[]
 }
 
 model Domain {
-  id       String @id @default(uuid())
-  name     String 
-  icon     String
-  userId   String 
-  user     User @relation(fields: [userId], references: [id])
-  campaignId String
-  campaign Campaign @relation(fields: [campaignId], references: [id])
-  helpdesk Helpdesk[]
+  id          String @id @default(uuid())
+  name        String 
+  icon        String
+  userId      String 
+  user        User @relation(fields: [userId], references: [id])
+  campaignId  String
+  campaign    Campaign @relation(fields: [campaignId], references: [id])
+  helpdesk    Helpdesk[]
+  chatbot     Chatbot[]
 }
 
 model Helpdesk {
-  id       String @id @default(uuid())
-  question String
-  answer   String
-  domainId String
-  domain   Domain @relation(fields: [domainId], references: [id])
+  id        String @id @default(uuid())
+  question  String
+  answer    String
+  domainId  String
+  domain    Domain @relation(fields: [domainId], references: [id])
+}
+
+model Chatbot {
+  id              String @id @default(uuid())
+  welcomeMessage  String
+  icon            String
+  background      String
+  textColor       String
+  helpDesk        Boolean
+  domainId        String
+  domain          Domain @relation(fields: [domainId], references: [id])
 }
