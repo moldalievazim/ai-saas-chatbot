@@ -1,79 +1,161 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
-
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["postgresqlExtensions"]
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
   // extensions = [pg_cron, pg_stat_statements]
 }
 
 model User {
-  id           String    @id @default(uuid())
-  fullname     String    @unique
-  clerkId      String
-  type         String 
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-  stripeId     String 
-  billings     Billings[]
-  campaign     Campaign[]
-  domain       Domain[]
+  id        String     @id @default(uuid())
+  fullname  String     @unique
+  clerkId   String
+  type      String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  stripeId  String
+  billings  Billings[]
+  campaigns Campaign[]
+  domains   Domain[]
 }
 
 model Billings {
-  id       String @id @default(uuid())
-  plan     String
-  credits  Int
-  userId   String
-  user     User   @relation(fields: [userId], references: [id])
+  id      String @id @default(uuid())
+  plan    String
+  credits Int
+  userId  String
+  user    User   @relation(fields: [userId], references: [id])
 }
 
 model Campaign {
-  id          String @id @default(uuid())
-  name        String 
-  customers   String[]
-  userId      String 
-  createdAt   DateTime @default(now())
-  user        User @relation(fields: [userId], references: [id])
-  domain      Domain[]
+  id        String   @id @default(uuid())
+  name      String
+  customers String[]
+  userId    String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  domain    Domain?
+
+  @@unique([userId])
 }
 
 model Domain {
-  id          String @id @default(uuid())
-  name        String 
-  icon        String
-  userId      String 
-  user        User @relation(fields: [userId], references: [id])
-  campaignId  String
-  campaign    Campaign @relation(fields: [campaignId], references: [id])
-  helpdesk    Helpdesk[]
-  chatbot     Chatbot[]
+  id              String            @id @default(uuid())
+  name            String
+  icon            String
+  userId          String
+  user            User              @relation(fields: [userId], references: [id])
+  campaignId      String
+  campaign        Campaign          @relation(fields: [campaignId], references: [id])
+  helpdesk        Helpdesk?
+  chatbot         Chatbot?
+  filterQuestions FilterQuestions[]
+  products        Product[]
+  customers       Customer[]
+  bookings        Bookings?
+
+  @@unique([userId])
+  @@unique([campaignId])
 }
 
 model Helpdesk {
-  id        String @id @default(uuid())
-  question  String
-  answer    String
-  domainId  String
-  domain    Domain @relation(fields: [domainId], references: [id])
+  id       String @id @default(uuid())
+  question String
+  answer   String
+  domainId String
+  domain   Domain @relation(fields: [domainId], references: [id])
+
+  @@unique([domainId])
 }
 
 model Chatbot {
-  id              String @id @default(uuid())
-  welcomeMessage  String
-  icon            String
-  background      String
-  textColor       String
-  helpDesk        Boolean
-  domainId        String
-  domain          Domain @relation(fields: [domainId], references: [id])
+  id             String  @id @default(uuid())
+  welcomeMessage String
+  icon           String
+  background     String
+  textColor      String
+  helpDesk       Boolean
+  domainId       String
+  domain         Domain  @relation(fields: [domainId], references: [id])
+
+  @@unique([domainId])
+}
+
+model FilterQuestions {
+  id       String @id @default(uuid())
+  question String
+  answered String
+  domainId String
+  domain   Domain @relation(fields: [domainId], references: [id])
+}
+
+model Product {
+  id        String   @id @default(uuid())
+  name      String
+  price     Int
+  image     String
+  createdAt DateTime @default(now())
+  domainId  String
+  domain    Domain   @relation(fields: [domainId], references: [id])
+}
+
+model Customer {
+  id                String              @id @default(uuid())
+  email             String
+  domainId          String
+  domain            Domain              @relation(fields: [domainId], references: [id])
+  bookings          Bookings[]
+  customerResponses CustomerResponses[]
+  chatrooms         ChatRoom[]
+}
+
+model Bookings {
+  id         String   @id @default(uuid())
+  date       DateTime
+  slot       String
+  email      String
+  customerId String
+  customer   Customer @relation(fields: [customerId], references: [id])
+
+  domainId String
+  domain   Domain @relation(fields: [domainId], references: [id])
+
+  @@unique([domainId])
+}
+
+model CustomerResponses {
+  id         String   @id @default(uuid())
+  question   String
+  answered   String
+  customerId String
+  customer   Customer @relation(fields: [customerId], references: [id])
+}
+
+model ChatRoom {
+  id          String        @id @default(uuid())
+  live        Boolean
+  mailed      Boolean
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime
+  customerId  String
+  customer    Customer      @relation(fields: [customerId], references: [id])
+  ChatMessage ChatMessage[]
+}
+
+model ChatMessage {
+  id         String   @id @default(uuid())
+  message    String
+  role       Role
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime
+  chatRoomId String
+  chatRoom   ChatRoom @relation(fields: [chatRoomId], references: [id])
+  seen       Boolean
+}
+
+enum Role {
+  User
 }
