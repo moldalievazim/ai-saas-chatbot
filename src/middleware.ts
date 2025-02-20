@@ -4,7 +4,7 @@ const isProtectedRoute = createRouteMatcher(["/dashboard(.*)", "/admin(.*)"]);
 const isPublicRoute = createRouteMatcher([
   "/auth/sign-in(.*)",
   "/auth/sign-up(.*)",
-  "/api/auth/webhooks(.*)",
+  "/api/auth/webhook(.*)",
 ]);
 
 export default clerkMiddleware(async (auth, req) => {
