@@ -1,4 +1,6 @@
-// import type { Metadata } from "next";
+// import { ThemeProvider } from "@/components/theme-provider";
+// import { AppSidebar } from "@/components/app-sidebar";
+// import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import {
   ClerkProvider,
   SignInButton,
@@ -15,8 +17,16 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
+      {/* <SidebarProvider> */}
+      {/* <AppSidebar /> */}
       <html lang="en">
         <body>
+          {/* <ThemeProvider
+              attribute={"class"}
+              defaultTheme={"system"}
+              enableSystem
+              disableTransitionOnChange
+            > */}
           <header className="flex justify-end items-center p-4 gap-4 h-16">
             <SignedOut>
               <SignInButton />
@@ -26,9 +36,12 @@ export default function RootLayout({
               <UserButton />
             </SignedIn>
           </header>
+          {/* <SidebarTrigger /> */}
           {children}
+          {/* </ThemeProvider> */}
         </body>
       </html>
+      {/* </SidebarProvider> */}
     </ClerkProvider>
   );
 }
