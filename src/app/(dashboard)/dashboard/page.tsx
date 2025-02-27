@@ -14,6 +14,8 @@ import {
 } from "@/components/ui/sidebar";
 import { Separator } from "@radix-ui/react-dropdown-menu";
 
+import "./globals.css";
+
 export default function Page() {
   return (
     <SidebarProvider>
