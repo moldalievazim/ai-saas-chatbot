@@ -1,13 +1,17 @@
-import { ClerkProvider, SignedIn, UserButton } from "@clerk/nextjs";
+import { SignedIn, UserButton } from "@clerk/nextjs";
+import { Providers } from "./providers";
+import "./globals.css";
+// import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+// import { AppSidebar } from "@/components/app-sidebar";
 
-async function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
-      <html lang="en">
+    <html lang="en">
+      <Providers>
         <body>
           <header className="flex justify-end items-center p-4 gap-4 h-16">
             <SignedIn>
@@ -16,9 +20,7 @@ async function RootLayout({
           </header>
           {children}
         </body>
-      </html>
-    </ClerkProvider>
+      </Providers>
+    </html>
   );
 }
-
-export default RootLayout;
