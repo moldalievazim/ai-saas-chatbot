@@ -1,52 +1,27 @@
-"use client";
-
-import { Geist, Geist_Mono } from "next/font/google";
-import { SignedIn, UserButton } from "@clerk/nextjs";
-import { Providers } from "./providers";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/app-sidebar";
-
+import { ClerkProvider } from "@clerk/nextjs";
+import { Inter } from "next/font/google";
+import React from "react";
 import "./globals.css";
-import React, { useEffect } from "react";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+const inter = Inter({ subsets: ["latin"] });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+export const metadata = {
+  title: "ChatBot",
+  description: "Your AI Assistant",
+};
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
-  const [isOpen, setIsOpen] = React.useState(false);
-
-  useEffect(() => {
-    setIsOpen(true);
-  }, []);
-
+}) {
   return (
-    <html lang="en">
-      <Providers>
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
-          <header className="flex justify-end items-center p-4 gap-4 h-16">
-            <SignedIn>
-              <UserButton />
-            </SignedIn>
-          </header>
-          <SidebarProvider open={isOpen} onOpenChange={setIsOpen}>
-            <AppSidebar />
-            <SidebarTrigger>{children}</SidebarTrigger>
-          </SidebarProvider>
-        </body>
-      </Providers>
-    </html>
+    <ClerkProvider
+      publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
+    >
+      <html lang="en">
+        <body className={inter.className}>{children}</body>
+      </html>
+    </ClerkProvider>
   );
 }
